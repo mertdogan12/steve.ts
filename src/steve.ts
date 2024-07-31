@@ -64,8 +64,11 @@ class Steve {
     );
   }
 
-  private calcArmRotation(x: number) {
-    return Math.cos(x * 0.09) * 0.05 + 0.05;
+  private calcArmRotation(rotation: number): [z: number, x: number] {
+    const z = Math.cos(rotation * 0.09) * 0.05 + 0.05;
+    const x = Math.sin(rotation * 0.067) * 0.05;
+
+    return [z, x];
   }
 
   private calcMouse(mouse: THREE.Vector2): [yaw: number, pitch: number] {
@@ -93,8 +96,12 @@ class Steve {
   public animateArms() {
     this._rotatonX += 0.1;
 
-    this._armLeft.rotation.z = this.calcArmRotation(this._rotatonX);
-    this._armRight.rotation.z = -this.calcArmRotation(this._rotatonX);
+    const [z, x] = this.calcArmRotation(this._rotatonX);
+
+    this._armLeft.rotation.z = z;
+    this._armRight.rotation.z = -z;
+    this._armLeft.rotation.x = x;
+    this._armRight.rotation.x = -x;
   }
 }
 
