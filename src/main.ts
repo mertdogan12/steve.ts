@@ -13,6 +13,9 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
+const mouse = new THREE.Vector2();
+document.addEventListener("mousemove", onDocumentMouseMove, false);
+
 const steve = new Steve();
 scene.add(steve.steve);
 
@@ -35,7 +38,13 @@ renderer.render(scene, camera);
 
 function animate() {
   orbitControls.update();
-  steve.animate();
+  steve.animateArms();
+  steve.lookAtMouse(mouse);
 
   renderer.render(scene, camera);
+}
+
+function onDocumentMouseMove(event: MouseEvent) {
+  mouse.x = event.clientX;
+  mouse.y = event.clientY;
 }
