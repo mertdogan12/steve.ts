@@ -83,7 +83,6 @@ class Steve {
   }
 
   public lookAtMouse(mouse: THREE.Vector2) {
-    console.log(mouse);
     const [yaw, pitch] = this.calcMouse(mouse);
 
     this._head.rotation.y = yaw;
