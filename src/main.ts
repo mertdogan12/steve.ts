@@ -6,6 +6,7 @@ import { Steve } from "./steve.ts";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x4bcae3);
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
