@@ -12,9 +12,7 @@ class Steve {
   private _legRight: THREE.Mesh;
 
   constructor() {
-    const texture = new THREE.TextureLoader().load(
-      "./assets/mertdogan12-skin.png"
-    );
+    const texture = new THREE.TextureLoader().load("./assets/example.png");
     texture.magFilter = THREE.NearestFilter;
 
     const material = new THREE.MeshStandardMaterial({
@@ -41,26 +39,16 @@ class Steve {
 
     // Body
     const bodyBox = new THREE.BoxGeometry(8, 12, 4.1);
-    this._body = new THREE.Mesh(bodyBox, material2);
+    this._body = new THREE.Mesh(bodyBox, material);
     this._body.position.set(0, 0, 0);
+
+    this.createUVData(bodyBox, 20, 20, 8, 12, 4);
 
     // Head
     const headBox = new THREE.BoxGeometry(8, 8, 8);
     const headMesh = new THREE.Mesh(headBox, material);
-    const uvData = headBox.attributes.uv as THREE.BufferAttribute;
 
-    const avData = [];
-    avData.push(...this.createUVData(2 * 8, 8));
-    avData.push(...this.createUVData(0, 8));
-    avData.push(...this.createUVData(3 * 8, 8));
-    avData.push(...this.createUVData(8, 0));
-    avData.push(...this.createUVData(8, 8));
-    avData.push(...this.createUVData(2 * 8, 0));
-
-    uvData.set(new Float32Array(avData));
-    uvData.needsUpdate = true;
-
-    console.log(uvData);
+    this.createUVData(headBox, 8, 8, 8, 8, 8);
 
     this._head.add(headMesh);
     this._head.position.set(0, 6, 0);
@@ -83,16 +71,43 @@ class Steve {
     );
   }
 
-  private createUVData(u: number, v: number): number[] {
+  private createUVData(
+    box: THREE.BoxGeometry,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    depth: number
+  ) {
+    const uvData = [
+      ...this.createUVDataSide(width + depth, y, depth, height), // Left
+      ...this.createUVDataSide(x - depth, y, depth, height), // Right
+      ...this.createUVDataSide(x, y - depth, width, depth), // Top
+      ...this.createUVDataSide(width + depth, y - depth, width, depth), // Bottom
+      ...this.createUVDataSide(x, y, width, height), // Front
+      ...this.createUVDataSide(2 * depth + width, y, width, height), // Back
+    ];
+
+    const uvAttribute = box.attributes.uv as THREE.BufferAttribute;
+    uvAttribute.set(new Float32Array(uvData));
+    uvAttribute.needsUpdate = true;
+  }
+
+  private createUVDataSide(
+    u: number,
+    v: number,
+    width: number,
+    height: number
+  ): number[] {
     return [
       u / 64,
       1 - v / 64,
-      (u + 8) / 64,
+      (u + width) / 64,
       1 - v / 64,
       u / 64,
-      1 - (v + 8) / 64,
-      (u + 8) / 64,
-      1 - (v + 8) / 64,
+      1 - (v + height) / 64,
+      (u + width) / 64,
+      1 - (v + height) / 64,
     ];
   }
 
