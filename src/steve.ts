@@ -80,12 +80,12 @@ class Steve {
     depth: number
   ) {
     const uvData = [
-      ...this.createUVDataSide(width + depth, y, depth, height), // Left
+      ...this.createUVDataSide(width + x, y, depth, height), // Left
       ...this.createUVDataSide(x - depth, y, depth, height), // Right
       ...this.createUVDataSide(x, y - depth, width, depth), // Top
       ...this.createUVDataSide(width + depth, y - depth, width, depth), // Bottom
       ...this.createUVDataSide(x, y, width, height), // Front
-      ...this.createUVDataSide(2 * depth + width, y, width, height), // Back
+      ...this.createUVDataSide(depth + width + x, y, width, height), // Back
     ];
 
     const uvAttribute = box.attributes.uv as THREE.BufferAttribute;
