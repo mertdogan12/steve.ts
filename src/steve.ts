@@ -11,8 +11,13 @@ class Steve {
   private _legLeft: THREE.Mesh;
   private _legRight: THREE.Mesh;
 
-  constructor() {
-    const texture = new THREE.TextureLoader().load("./assets/example.png");
+  constructor(texture_path?: string) {
+    if (texture_path === undefined) {
+      texture_path = "./assets/example.png";
+    }
+
+    const texture = new THREE.TextureLoader().load(texture_path);
+
     texture.magFilter = THREE.NearestFilter;
 
     const material = new THREE.MeshStandardMaterial({

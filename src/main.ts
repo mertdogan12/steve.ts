@@ -17,7 +17,12 @@ const camera = new THREE.PerspectiveCamera(
 const mouse = new THREE.Vector2();
 document.addEventListener("mousemove", onDocumentMouseMove, false);
 
-const steve = new Steve();
+const BASE_URI = "https://mineskin.eu/skin/";
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const name = urlParams.get("name");
+
+const steve = name === null ? new Steve() : new Steve(BASE_URI + name);
 scene.add(steve.steve);
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
