@@ -18,20 +18,21 @@ class Steve {
     const material = new THREE.MeshStandardMaterial({
       map: texture,
     });
-    const material2 = new THREE.MeshStandardMaterial({
-      color: 0xeb4034,
-    });
 
     // Arms
-    const armBox = new THREE.BoxGeometry(4, 12, 4);
+    const armLeftBox = new THREE.BoxGeometry(4, 12, 4);
+    this.createUVData(armLeftBox, 36, 52, 4, 12, 4);
 
-    const armLeftMesh = new THREE.Mesh(armBox, material2);
+    const armRightBox = new THREE.BoxGeometry(4, 12, 4);
+    this.createUVData(armRightBox, 44, 20, 4, 12, 4);
+
+    const armLeftMesh = new THREE.Mesh(armLeftBox, material);
     this._armLeft.add(armLeftMesh);
 
     this._armLeft.position.set(4, 2, 0);
     armLeftMesh.position.set(2, -2, 0);
 
-    const armRightMesh = new THREE.Mesh(armBox, material2);
+    const armRightMesh = new THREE.Mesh(armRightBox, material);
     this._armRight.add(armRightMesh);
 
     this._armRight.position.set(-4, 2, 0);
@@ -39,10 +40,10 @@ class Steve {
 
     // Body
     const bodyBox = new THREE.BoxGeometry(8, 12, 4.1);
+    this.createUVData(bodyBox, 20, 20, 8, 12, 4);
+
     this._body = new THREE.Mesh(bodyBox, material);
     this._body.position.set(0, 0, 0);
-
-    this.createUVData(bodyBox, 20, 20, 8, 12, 4);
 
     // Head
     const headBox = new THREE.BoxGeometry(8, 8, 8);
@@ -55,10 +56,16 @@ class Steve {
     headMesh.position.set(0, 4, 0);
 
     // Legs
-    this._legLeft = new THREE.Mesh(armBox, material2);
+    const legLeftBox = new THREE.BoxGeometry(4, 12, 4);
+    this.createUVData(legLeftBox, 20, 52, 4, 12, 4);
+
+    const legRightBox = new THREE.BoxGeometry(4, 12, 4);
+    this.createUVData(legRightBox, 4, 20, 4, 12, 4);
+
+    this._legLeft = new THREE.Mesh(legLeftBox, material);
     this._legLeft.position.set(2, -12, 0);
 
-    this._legRight = new THREE.Mesh(armBox, material2);
+    this._legRight = new THREE.Mesh(legRightBox, material);
     this._legRight.position.set(-2, -12, 0);
 
     this.steve.add(
@@ -83,7 +90,7 @@ class Steve {
       ...this.createUVDataSide(width + x, y, depth, height), // Left
       ...this.createUVDataSide(x - depth, y, depth, height), // Right
       ...this.createUVDataSide(x, y - depth, width, depth), // Top
-      ...this.createUVDataSide(width + depth, y - depth, width, depth), // Bottom
+      ...this.createUVDataSide(x + width, y - depth, width, depth), // Bottom
       ...this.createUVDataSide(x, y, width, height), // Front
       ...this.createUVDataSide(depth + width + x, y, width, height), // Back
     ];
