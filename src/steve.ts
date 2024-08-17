@@ -7,8 +7,8 @@ class Steve {
   private _armRight: THREE.Group = new THREE.Group();
   private _head: THREE.Group = new THREE.Group();
   private _body: THREE.Group = new THREE.Group();
-  private _legLeft: THREE.Mesh;
-  private _legRight: THREE.Mesh;
+  private _legLeft: THREE.Group = new THREE.Group();
+  private _legRight: THREE.Group = new THREE.Group();
 
   constructor(texture_path?: string) {
     if (texture_path === undefined) {
@@ -22,27 +22,48 @@ class Steve {
     const material = new THREE.MeshStandardMaterial({
       map: texture,
     });
-    material.transparent = true;
+    const secondLayerMaterial = new THREE.MeshStandardMaterial({
+      map: texture,
+    });
+    secondLayerMaterial.transparent = true;
 
     // Arms
     this._armLeft.add(this.createBox(2, -2, 0, 4, 12, 4, 36, 52, material));
+    this._armLeft.add(
+      this.createBox(2, -2, 0, 4, 12, 4, 52, 52, secondLayerMaterial, 0.5)
+    );
     this._armLeft.position.set(4, 2, 0);
 
     this._armRight.add(this.createBox(-2, -2, 0, 4, 12, 4, 44, 20, material));
+    this._armRight.add(
+      this.createBox(-2, -2, 0, 4, 12, 4, 44, 36, secondLayerMaterial, 0.5)
+    );
     this._armRight.position.set(-4, 2, 0);
 
     // Body
     this._body.add(this.createBox(0, 0, 0, 8, 12, 4.1, 20, 20, material));
+    this._body.add(
+      this.createBox(0, 0, 0, 8, 12, 4.1, 20, 36, secondLayerMaterial, 0.5)
+    );
     this._body;
 
     // Head
     this._head.add(this.createBox(0, 4, 0, 8, 8, 8, 8, 8, material));
-    this._head.add(this.createBox(0, 4, 0, 8, 8, 8, 40, 8, material, 1));
+    this._head.add(
+      this.createBox(0, 4, 0, 8, 8, 8, 40, 8, secondLayerMaterial, 0.5)
+    );
     this._head.position.set(0, 6, 0);
 
     // Legs
-    this._legLeft = this.createBox(2, -12, 0, 4, 12, 4, 4, 20, material);
-    this._legRight = this.createBox(-2, -12, 0, 4, 12, 4, 4, 20, material);
+    this._legLeft.add(this.createBox(2, -12, 0, 4, 12, 4, 4, 20, material));
+    this._legLeft.add(
+      this.createBox(2, -12, 0, 4, 12, 4, 4, 52, secondLayerMaterial, 0.5)
+    );
+
+    this._legRight.add(this.createBox(-2, -12, 0, 4, 12, 4, 4, 20, material));
+    this._legRight.add(
+      this.createBox(-2, -12, 0, 4, 12, 4, 4, 36, secondLayerMaterial, 0.5)
+    );
 
     this.steve.add(
       this._armLeft,
