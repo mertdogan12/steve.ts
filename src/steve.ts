@@ -6,8 +6,7 @@ class Steve {
   private _armLeft: THREE.Group = new THREE.Group();
   private _armRight: THREE.Group = new THREE.Group();
   private _head: THREE.Group = new THREE.Group();
-
-  private _body: THREE.Mesh;
+  private _body: THREE.Group = new THREE.Group();
   private _legLeft: THREE.Mesh;
   private _legRight: THREE.Mesh;
 
@@ -23,55 +22,27 @@ class Steve {
     const material = new THREE.MeshStandardMaterial({
       map: texture,
     });
+    material.transparent = true;
 
     // Arms
-    const armLeftBox = new THREE.BoxGeometry(4, 12, 4);
-    this.createUVData(armLeftBox, 36, 52, 4, 12, 4);
-
-    const armRightBox = new THREE.BoxGeometry(4, 12, 4);
-    this.createUVData(armRightBox, 44, 20, 4, 12, 4);
-
-    const armLeftMesh = new THREE.Mesh(armLeftBox, material);
-    this._armLeft.add(armLeftMesh);
-
+    this._armLeft.add(this.createBox(2, -2, 0, 4, 12, 4, 36, 52, material));
     this._armLeft.position.set(4, 2, 0);
-    armLeftMesh.position.set(2, -2, 0);
 
-    const armRightMesh = new THREE.Mesh(armRightBox, material);
-    this._armRight.add(armRightMesh);
-
+    this._armRight.add(this.createBox(-2, -2, 0, 4, 12, 4, 44, 20, material));
     this._armRight.position.set(-4, 2, 0);
-    armRightMesh.position.set(-2, -2, 0);
 
     // Body
-    const bodyBox = new THREE.BoxGeometry(8, 12, 4.1);
-    this.createUVData(bodyBox, 20, 20, 8, 12, 4);
-
-    this._body = new THREE.Mesh(bodyBox, material);
-    this._body.position.set(0, 0, 0);
+    this._body.add(this.createBox(0, 0, 0, 8, 12, 4.1, 20, 20, material));
+    this._body;
 
     // Head
-    const headBox = new THREE.BoxGeometry(8, 8, 8);
-    const headMesh = new THREE.Mesh(headBox, material);
-
-    this.createUVData(headBox, 8, 8, 8, 8, 8);
-
-    this._head.add(headMesh);
+    this._head.add(this.createBox(0, 4, 0, 8, 8, 8, 8, 8, material));
+    this._head.add(this.createBox(0, 4, 0, 8, 8, 8, 40, 8, material, 1));
     this._head.position.set(0, 6, 0);
-    headMesh.position.set(0, 4, 0);
 
     // Legs
-    const legLeftBox = new THREE.BoxGeometry(4, 12, 4);
-    this.createUVData(legLeftBox, 20, 52, 4, 12, 4);
-
-    const legRightBox = new THREE.BoxGeometry(4, 12, 4);
-    this.createUVData(legRightBox, 4, 20, 4, 12, 4);
-
-    this._legLeft = new THREE.Mesh(legLeftBox, material);
-    this._legLeft.position.set(2, -12, 0);
-
-    this._legRight = new THREE.Mesh(legRightBox, material);
-    this._legRight.position.set(-2, -12, 0);
+    this._legLeft = this.createBox(2, -12, 0, 4, 12, 4, 4, 20, material);
+    this._legRight = this.createBox(-2, -12, 0, 4, 12, 4, 4, 20, material);
 
     this.steve.add(
       this._armLeft,
@@ -135,6 +106,32 @@ class Steve {
     const pitch = -(mouse.y / window.innerHeight) * 2 + 1;
 
     return [yaw, -pitch];
+  }
+
+  private createBox(
+    x: number,
+    y: number,
+    z: number,
+    width: number,
+    height: number,
+    depth: number,
+    textureX: number,
+    textureY: number,
+    material: THREE.MeshStandardMaterial,
+    scale = 0
+  ): THREE.Mesh {
+    const box = new THREE.BoxGeometry(
+      width + scale,
+      height + scale,
+      depth + scale
+    );
+    const mesh = new THREE.Mesh(box, material);
+
+    mesh.position.set(x, y, z);
+
+    this.createUVData(box, textureX, textureY, width, height, depth);
+
+    return mesh;
   }
 
   public get steve() {
