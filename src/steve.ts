@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 
 class Steve {
   private _rotatonX: number = 1;
@@ -9,6 +10,8 @@ class Steve {
   private _body: THREE.Group = new THREE.Group();
   private _legLeft: THREE.Group = new THREE.Group();
   private _legRight: THREE.Group = new THREE.Group();
+
+  private raycaster: THREE.Raycaster = new THREE.Raycaster();
 
   constructor(texture_path?: string) {
     if (texture_path === undefined) {
@@ -159,14 +162,26 @@ class Steve {
     return this._steve;
   }
 
-  public lookAtMouse(mouse: THREE.Vector2) {
-    const [yaw, pitch] = this.calcMouse(mouse);
+  public lookAtMouse(mouse: THREE.Vector2, camera: THREE.Camera) {
+    // Normalize mouse position to [-1, 1]
+    mouse.x = (mouse.x / window.innerWidth) * 2 - 1;
+    mouse.y = -(mouse.y / window.innerHeight) * 2 + 1;
 
-    this._head.rotation.y = yaw;
-    this._head.rotation.x = pitch;
+    this.raycaster.setFromCamera(mouse, camera);
 
-    this.steve.rotation.y = Math.atan(yaw / 40) * 40;
-    this.steve.rotation.x = Math.atan(pitch / 40) * 20;
+    const planeZ = new THREE.Plane(
+      new THREE.Vector3(0, 0, 1),
+      -camera.position.z + 30
+    );
+    console.log(-camera.position.z + 5);
+
+    const insertPoint = new THREE.Vector3();
+    this.raycaster.ray.intersectPlane(planeZ, insertPoint);
+
+    this._head.lookAt(insertPoint);
+
+    this.steve.rotation.y = Math.atan(this._head.rotation.y / 40) * 40;
+    this.steve.rotation.x = Math.atan(this._head.rotation.x / 40) * 20;
   }
 
   public animateArms() {

@@ -8,10 +8,10 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x4bcae3);
 const camera = new THREE.PerspectiveCamera(
-  75,
+  50,
   window.innerWidth / window.innerHeight,
-  0.1,
-  1000
+  1,
+  100
 );
 
 const mouse = new THREE.Vector2();
@@ -31,7 +31,9 @@ scene.add(ambientLight);
 const gridHelper = new THREE.GridHelper(200, 50);
 scene.add(gridHelper);
 
-camera.position.z = 50;
+camera.position.z = 70;
+camera.position.y = 10;
+camera.position.x = 0;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -45,7 +47,6 @@ renderer.render(scene, camera);
 function animate() {
   orbitControls.update();
   steve.animateArms();
-  steve.lookAtMouse(mouse);
 
   renderer.render(scene, camera);
 }
@@ -53,4 +54,6 @@ function animate() {
 function onDocumentMouseMove(event: MouseEvent) {
   mouse.x = event.clientX;
   mouse.y = event.clientY;
+
+  steve.lookAtMouse(mouse, camera);
 }
